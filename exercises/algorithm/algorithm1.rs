@@ -67,8 +67,10 @@ impl<T> LinkedList<T> {
             },
         }
     }
-    pub fn merge(list_a: LinkedList<T>, list_b: LinkedList<T>) -> Self {
-        //TODO
+}
+
+impl<T: Copy + PartialOrd> LinkedList<T> {
+    pub fn merge(mut list_a: LinkedList<T>, mut list_b: LinkedList<T>) -> Self {
         let mut res = LinkedList {
             length: list_a.length + list_b.length,
             start: None,
