@@ -18,7 +18,7 @@ mod tests {
 
     #[test]
     fn layered_option() {
-        let range = 10;
+        let mut range = 10;
         let mut optional_integers: Vec<Option<i8>> = vec![None];
 
         for i in 1..(range + 1) {

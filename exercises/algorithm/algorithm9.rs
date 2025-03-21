@@ -95,7 +95,19 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-        None
+        if self.count == 0 {
+            None
+        } else if self.count == 1 {
+            self.count -= 1;
+            self.items.pop()
+        } else {
+            self.swap(1, self.count);
+            self.count -= 1;
+
+            let res = self.items.pop();
+            self.down_float(1);
+            res
+        }
     }
 }
 

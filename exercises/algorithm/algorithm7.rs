@@ -101,6 +101,46 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 
 fn bracket_match(bracket: &str) -> bool {
     //TODO
+    if bracket.is_empty() {
+        return true;
+    }
+    let mut st = Stack::<char>::new();
+    let mut temp: char;
+    for c in bracket.chars() {
+        if c == '[' || c == '{' || c == '(' {
+            st.push(c);
+        } else if c == ')' {
+            match st.pop() {
+                None => return false,
+                Some(ch) => {
+                    if ch != '(' {
+                        return false;
+                    }
+                }
+            }
+        } else if c == ']' {
+            match st.pop() {
+                None => return false,
+                Some(ch) => {
+                    if ch != '[' {
+                        return false;
+                    }
+                }
+            }
+        } else if c == '}' {
+            match st.pop() {
+                None => return false,
+                Some(ch) => {
+                    if ch != '{' {
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    if !st.is_empty() {
+        return false;
+    }
     true
 }
 
