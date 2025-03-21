@@ -2,7 +2,7 @@
     heap
     This question requires you to implement a binary heap function
 */
-
+use std::clone::Clone;
 use std::cmp::Ord;
 use std::default::Default;
 
@@ -17,7 +17,7 @@ where
 
 impl<T> Heap<T>
 where
-    T: Default,
+    T: Default + Clone,
 {
     pub fn new(comparator: fn(&T, &T) -> bool) -> Self {
         Self {
@@ -41,6 +41,18 @@ where
         self.count += 1;
         if self.count > 1 {
             self.up_float(self.count);
+        }
+    }
+
+    fn up_float(&mut self, idx: usize) {
+        if idx <= 1 {
+            return;
+        }
+        let p_idx = self.parent_idx(idx);
+        if !(self.comparator)(&self.items[p_idx], &self.items[idx]) {
+            //
+            self.swap(p_idx, idx);
+            self.up_float(p_idx);
         }
     }
 
@@ -69,6 +81,38 @@ where
         } else {
             return self.count - 1;
         }
+    }
+
+    fn down_float(&mut self, idx: usize) {
+        if idx >= self.count {
+            return;
+        }
+        let l_idx = self.left_child_idx(idx);
+        let r_idx = self.right_child_idx(idx);
+        if l_idx > self.count {
+            return;
+        } else if r_idx > self.count {
+            // left
+            if !(self.comparator)(&self.items[idx], &self.items[l_idx]) {
+                self.swap(idx, l_idx);
+                self.down_float(l_idx);
+            }
+        } else if (self.comparator)(&self.items[l_idx], &self.items[r_idx])
+            && !(self.comparator)(&self.items[idx], &self.items[l_idx])
+        {
+            // left
+            self.swap(idx, l_idx);
+            self.down_float(l_idx);
+        } else if (self.comparator)(&self.items[r_idx], &self.items[l_idx])
+            && !(self.comparator)(&self.items[idx], &self.items[r_idx])
+        {
+            // right
+            self.swap(idx, r_idx);
+            self.down_float(r_idx);
+        }
+    }
+    fn swap(&mut self, idx_a: usize, idx_b: usize) {
+        self.items.swap(idx_a, idx_b);
     }
 }
 
